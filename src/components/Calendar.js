@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { shifts } from '../data/scheduleData';
 
 const Calendar = ({ onDateSelect }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const getTodayDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+  
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
+  
+  // Notify parent of initial selection (today)
+  useEffect(() => {
+    onDateSelect(getTodayDate());
+  }, []); // Run once on mount
   
   const now = new Date();
   const year = now.getFullYear();

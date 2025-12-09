@@ -4,14 +4,12 @@ import { shifts, routines } from '../data/scheduleData';
 const Schedule = ({ selectedDate }) => {
   if (!selectedDate) {
     return (
-      <section className="lg:col-span-5">
-        <div className="glass-panel p-8 rounded-2xl text-center text-gray-500 h-full flex flex-col justify-center items-center border-dashed border-2 border-gray-700/50">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <p>Select a date to view your routine</p>
-        </div>
-      </section>
+      <div className="glass-panel p-8 rounded-2xl text-center text-gray-500 h-full flex flex-col justify-center items-center border-dashed border-2 border-gray-700/50">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p>Select a date to view your routine</p>
+      </div>
     );
   }
 
@@ -19,15 +17,14 @@ const Schedule = ({ selectedDate }) => {
   const routineList = routines[shiftType];
 
   return (
-    <section className="lg:col-span-5">
-      <div key={selectedDate} className="glass-panel p-6 rounded-2xl animate-fade-in sticky top-8">
-        <h2 className="text-xl font-bold mb-6 flex items-center flex-wrap gap-2">
-          <span className="text-gray-400 text-lg font-normal">Schedule for</span> 
-          <span className="text-white">{selectedDate}</span>
-          <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-            shiftType === 'OFF' ? 'bg-green-500/20 text-green-300' : 'bg-blue-500/20 text-blue-300'
-          }`}>
-            {shiftType === 'OFF' ? 'Day Off' : 'Shift: ' + shiftType}
+    <div key={selectedDate} className="glass-panel p-6 rounded-2xl animate-fade-in sticky top-8">
+      <h2 className="text-xl font-bold mb-6 flex items-center flex-wrap gap-2">
+        <span className="text-gray-400 text-lg font-normal">Schedule for</span> 
+        <span className="text-white">{selectedDate}</span>
+        <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+          shiftType === 'OFF' ? 'bg-green-500/20 text-green-300' : 'bg-blue-500/20 text-blue-300'
+        }`}>
+          {shiftType === 'OFF' ? 'Day Off' : 'Shift: ' + shiftType}
           </span>
         </h2>
         
@@ -49,7 +46,6 @@ const Schedule = ({ selectedDate }) => {
           ))}
         </div>
       </div>
-    </section>
   );
 };
 

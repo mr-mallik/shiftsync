@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from './components/Calendar';
 import Schedule from './components/Schedule';
+import TimelineView from './components/TimelineView';
 import { downloadICS } from './utils/icsGenerator';
 import './App.css';
 
 function App() {
-  const [selectedDate, setSelectedDate] = useState(null);
+  // Set default to today's date
+  const getTodayDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+  
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'timeline'
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -51,7 +58,49 @@ function App() {
         {/* Main Content */}
         <main className="grid lg:grid-cols-12 gap-8">
           <Calendar onDateSelect={handleDateSelect} />
-          <Schedule selectedDate={selectedDate} />
+          
+          <section className="lg:col-span-5 space-y-6">
+            {/* View Toggle */}
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'list'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700'
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                  List
+                </span>
+              </button>
+              <button
+                onClick={() => setViewMode('timeline')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'timeline'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700'
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Timeline
+                </span>
+              </button>
+            </div>
+
+            {/* Content Views */}
+            {viewMode === 'list' ? (
+              <Schedule selectedDate={selectedDate} />
+            ) : (
+              <TimelineView selectedDate={selectedDate} />
+            )}
+          </section>
         </main>
         
         <footer className="mt-12 text-center text-gray-600 text-sm">
