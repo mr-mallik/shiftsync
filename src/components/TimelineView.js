@@ -8,6 +8,19 @@ const TimelineView = ({ selectedDate }) => {
 
   const shiftType = shifts[selectedDate] || "OFF";
   const routineList = routines[shiftType] || [];
+  
+  // Check if next day has a night shift that requires pre-shift activities today
+  const nextDate = new Date(selectedDate);
+  nextDate.setDate(nextDate.getDate() + 1);
+  const nextDateStr = nextDate.toISOString().split('T')[0];
+  const nextShiftType = shifts[nextDateStr];
+  const preShiftRoutines = nextShiftType ? routines[`${nextShiftType}-pre`] : null;
+  
+  // Combine today's routines with pre-shift routines for tomorrow
+  const combinedRoutines = [...routineList];
+  if (preShiftRoutines) {
+    combinedRoutines.push(...preShiftRoutines.map(([time, task]) => [time, `${task} (for next shift)`]));
+  }
 
   // Parse time ranges and create timeline blocks
   const parseTime = (timeStr) => {
@@ -38,7 +51,7 @@ const TimelineView = ({ selectedDate }) => {
     return null;
   };
 
-  const timelineBlocks = routineList
+  const timelineBlocks = combinedRoutines
     .map(([time, task]) => {
       const range = parseTimeRange(time);
       return range ? { ...range, task } : null;

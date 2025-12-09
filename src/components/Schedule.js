@@ -14,7 +14,20 @@ const Schedule = ({ selectedDate }) => {
   }
 
   const shiftType = shifts[selectedDate] || "OFF";
-  const routineList = routines[shiftType];
+  const routineList = routines[shiftType] || [];
+  
+  // Check if next day has a night shift that requires pre-shift activities today
+  const nextDate = new Date(selectedDate);
+  nextDate.setDate(nextDate.getDate() + 1);
+  const nextDateStr = nextDate.toISOString().split('T')[0];
+  const nextShiftType = shifts[nextDateStr];
+  const preShiftRoutines = nextShiftType ? routines[`${nextShiftType}-pre`] : null;
+  
+  // Combine today's routines with pre-shift routines for tomorrow
+  const combinedRoutines = [...routineList];
+  if (preShiftRoutines) {
+    combinedRoutines.push(...preShiftRoutines.map(([time, task]) => [time, `${task} (for next shift)`]));
+  }
 
   return (
     <div key={selectedDate} className="glass-panel p-6 rounded-2xl animate-fade-in sticky top-8">
@@ -29,7 +42,7 @@ const Schedule = ({ selectedDate }) => {
         </h2>
         
         <div className="space-y-3">
-          {routineList && routineList.map(([time, task], index) => (
+          {combinedRoutines && combinedRoutines.map(([time, task], index) => (
             <div
               key={`${selectedDate}-${index}`}
               className="flex flex-col sm:flex-row sm:items-center justify-between glass-card p-4 rounded-lg animate-fade-in"
